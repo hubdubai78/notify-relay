@@ -1,0 +1,20 @@
+name: WhatsApp Notify
+on:
+  repository_dispatch:
+    types: [whatsapp_notify]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send WhatsApp
+        env:
+          MESSAGE: ${{ github.event.client_payload.message }}
+        run: |
+          python3 -c "
+          import urllib.request, urllib.parse, os
+          msg = os.environ['MESSAGE']
+          url = f'https://api.callmebot.com/whatsapp.php?phone=971504987285&text={urllib.parse.quote(msg)}&apikey=3037645'
+          urllib.request.urlopen(url, timeout=15)
+          print('Sent:', msg)
+          "
